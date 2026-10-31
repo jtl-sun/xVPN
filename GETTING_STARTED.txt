@@ -1,0 +1,56 @@
+xVPN Manager 1.3.5 — Windows 11 / Ubuntu 24.04
+
+WINDOWS INSTALL / UPDATE
+1. Quit xVPN Manager. Do not uninstall Proton VPN or WireGuard.
+2. Extract the entire new ZIP to a folder.
+3. Double-click install_windows.bat.
+4. Launch xVPN Manager from the desktop shortcut.
+5. Existing imported VPN profiles and preferences are preserved in:
+   %LOCALAPPDATA%\xVPNManager\profiles.json
+   %LOCALAPPDATA%\xVPNManager\preferences.json
+6. Keep original imported .conf/.ovpn files in their original locations.
+
+PROTON VPN OFFICIAL APPLICATION
+- If Proton VPN is not installed, xVPN shows a notice and official download link:
+  https://protonvpn.com/download-windows
+- Install Proton VPN and sign in only in the official Proton app.
+- Open the official app through xVPN; connect/disconnect in Proton itself.
+- The xVPN Proton integration does NOT log in or connect on your behalf.
+- If installed but not detected, select Locate Proton App and select the
+  *installed* ProtonVPN.Launcher.exe, not the installer download.
+
+MANUAL WIREGUARD CONFIGURATION MODE (SEPARATE FROM OFFICIAL PROTON APP)
+- Import the provider-issued WireGuard .conf through Add Profile.
+- Install the official WireGuard Windows client: https://www.wireguard.com/install/
+- Disconnect the Proton VPN official app before connecting manually.
+- Run xVPN as Administrator (Tools > Restart as administrator).
+- Press Connect and allow up to 22 seconds for WireGuard handshake verification.
+- 'Connected (WG)' means recent authenticated handshake, not proven public IP.
+- Press Check IP to verify your public IP and country.
+- If the handshake fails, xVPN automatically stops only the tunnel it started.
+- If automatic recovery fails, OPEN WIREGUARD and DEACTIVATE the tunnel manually.
+- Existing manually started tunnels are not automatically disconnected.
+- Do not share .conf files: they can contain private keys.
+
+SHORTCUTS
+Ctrl+O = Import profile, Ctrl+F = Search, Ctrl+I = Check IP, F5 = Refresh.
+
+NOTES
+VPN availability and server selection depend on your provider account.
+No third-party VPN provider credentials are stored by xVPN Manager.
+Live Windows 11 network connection and recovery tests have not been performed.
+
+SLOW MANUAL WIREGUARD / WINDOW CLIPPING (1.3.4)
+- After importing/selecting a WireGuard .conf, use:
+    Connection > WireGuard diagnostics and MTU test...
+- Shows handshake, transferred bytes, route and MTU information without keys.
+- Optional Create MTU test copy uses 1360 by default; 1280 is a fallback experiment.
+- Original .conf is NOT edited. New copy contains the same private key: protect it.
+- Disconnect all other VPN tunnels before connecting the MTU test profile.
+- A valid handshake does not guarantee a fast or usable internet connection.
+- Setup / Help now scrolls while its bottom buttons stay visible.
+
+APP ICON (1.3.5)
+- A new simplified xVPN shield icon appears in the program title bar and window header.
+- Windows install shortcut has its own xVPN icon. If a pinned icon does not update, unpin and re-pin.
+- Ubuntu application menu has the matching icon.

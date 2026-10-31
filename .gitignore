@@ -5,6 +5,7 @@ __pycache__/
 build/
 dist/
 *.spec
+# NEVER upload account-issued VPN profiles or private keys.
 *.conf
 *.ovpn
 *.key
@@ -15,6 +16,8 @@ dist/
 .env.*
 profiles.json
 settings.json
+# Release asset is uploaded through gh release, not committed.
 .release/
+# Windows artifacts
 Thumbs.db
 Desktop.ini
