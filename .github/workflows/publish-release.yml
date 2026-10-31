@@ -1,0 +1,65 @@
+name: Publish xVPN v1.3.5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out versioned source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build portable installation ZIP from source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+
+          output = Path('20261101-06_xVPN_Manager_1.3.5.zip')
+          names = [
+              'app.py', 'install_windows.bat', 'install_ubuntu.sh',
+              'launch_xvpn.vbs', 'run_ubuntu.sh', 'xvpn.cmd',
+              'GETTING_STARTED.txt', 'README.md', 'CHANGELOG.md',
+              'LICENSE',
+          ]
+          names += [p.as_posix() for p in Path('xvpn').rglob('*') if p.is_file()]
+          names += [p.as_posix() for p in Path('tests').glob('test_*.py')]
+          with ZipFile(output, 'w', ZIP_DEFLATED, compresslevel=9) as z:
+              for name in sorted(set(names)):
+                  z.write(name)
+          print(f'Built {output}: {output.stat().st_size} bytes')
+          PY
+          sha256sum 20261101-06_xVPN_Manager_1.3.5.zip > 20261101-06_xVPN_Manager_1.3.5.zip.sha256
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.3.5 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release v1.3.5 already exists; not overwriting it.'
+            exit 0
+          fi
+          gh release create v1.3.5 \
+            20261101-06_xVPN_Manager_1.3.5.zip \
+            20261101-06_xVPN_Manager_1.3.5.zip.sha256 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title 'xVPN Manager v1.3.5' \
+            --notes-file RELEASE_NOTES_v1.3.5.md \
+            --latest
